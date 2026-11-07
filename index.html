@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SiliconPro Academy - Nền tảng Học Thiết kế Vi mạch & Mô phỏng</title>
+    <style>
+        :root {
+            --bg-main: #0f172a;
+            --sidebar-bg: #1e293b;
+            --panel-bg: #1e293b;
+            --border-color: #334155;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-blue: #38bdf8;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- SIDEBAR LỘ TRÌNH --- */
+        aside {
+            width: 320px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand {
+            padding: 20px;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .curriculum-list {
+            list-style: none;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .module-header {
+            padding: 12px 20px;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            background-color: rgba(0,0,0,0.1);
+        }
+
+        .lesson-item {
+            padding: 12px 20px 12px 30px;
+            font-size: 0.92rem;
+            border-bottom: 1px solid rgba(51, 65, 85, 0.4);
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .lesson-item:hover {
+            background-color: rgba(56, 189, 248, 0.1);
+            color: var(--accent-blue);
+        }
+
+        .lesson-item.active {
+            background-color: rgba(56, 189, 248, 0.15);
+            border-left: 4px solid var(--accent-blue);
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        /* --- WORKSPACE CHÍNH --- */
+        .workspace {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header.top-nav {
+            height: 65px;
+            background-color: var(--panel-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 25px;
+        }
+
+        .lesson-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        button {
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.88rem;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-sim {
+            background-color: var(--accent-green);
+            color: white;
+        }
+
+        .btn-reset {
+            background-color: #475569;
+            color: white;
+        }
+
+        /* --- SPLIT CONTENT PANELS --- */
+        .content-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        .pane {
+            background-color: var(--panel-bg);
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .pane-header {
+            padding: 12px 18px;
+            background-color: rgba(0,0,0,0.2);
+            font-weight: 600;
+            font-size: 0.88rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pane-body {
+            flex: 1;
+            padding: 18px;
+            overflow-y: auto;
+            font-family: 'Fira Code', Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            color: #cbd5e1;
+        }
+
+        /* Code Editor Style */
+        .code-editor {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            border: none;
+            color: var(--accent-blue);
+            resize: none;
+            font-family: inherit;
+            font-size: inherit;
+            outline: none;
+            line-height: inherit;
+        }
+
+        /* Waveform & Schematic Styling */
+        .waveform-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            background: rgba(15, 23, 42, 0.6);
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .signal-name {
+            width: 80px;
+            font-weight: bold;
+            color: var(--accent-purple);
+        }
+
+        .signal-wave {
+            flex: 1;
+            letter-spacing: 2px;
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .console-box {
+            background-color: #0b0f19;
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 0.82rem;
+            border: 1px solid #1e293b;
+            min-height: 100px;
+            max-height: 160px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SIDEBAR -->
+    <aside>
+        <div class="brand">
+            <span>⚡ SiliconPro Academy</span>
+        </div>
+        <ul class="curriculum-list">
+            <li class="module-header">Phase 1: Mạch Điện & Phần Cứng</li>
+            <li class="lesson-item" onclick="loadLesson(1)">1. Ôn tập MOSFET & Cổng CMOS</li>
+            
+            <li class="module-header">Phase 2: Verilog & Mạch Số</li>
+            <li class="lesson-item active" onclick="loadLesson(2)">2. Mạch cộng toàn phần (Full Adder)</li>
+            <li class="lesson-item" onclick="loadLesson(3)">3. Thiết kế FSM (Máy trạng thái hữu hạn)</li>
+            
+            <li class="module-header">Phase 3: Vi Kiến Trúc SoC</li>
+            <li class="lesson-item" onclick="loadLesson(4)">4. Khối ALU 4-bit (Arithmetic Logic Unit)</li>
+            <li class="lesson-item" onclick="loadLesson(5)">5. Vi xử lý RISC-V Đơn nhân (RV32I)</li>
+
+            <li class="module-header">Phase 4: ASIC & Physical Design</li>
+            <li class="lesson-item" onclick="loadLesson(6)">6. Tổng hợp Logic & STA (Pro)</li>
+        </ul>
+    </aside>
+
+    <!-- WORKSPACE -->
+    <div class="workspace">
+        <header class="top-nav">
+            <div class="lesson-title" id="current-title">Bài học: Thiết kế mạch Full Adder bằng Verilog HDL</div>
+            <div class="actions">
+                <button class="btn-reset" onclick="resetCode()">Làm lại</button>
+                <button class="btn-sim" onclick="runSimulation()">▶ Biên dịch & Mô phỏng</button>
+            </div>
+        </header>
+
+        <div class="content-grid">
+            <!-- CỘT 1: TRÌNH SOẠN THẢO MÃ NGUỒN (RTL CODE) -->
+            <div class="pane">
+                <div class="pane-header">
+                    <span>Trình soạn thảo Verilog (RTL Editor)</span>
+                    <span style="font-size: 0.75rem; color: var(--text-muted);">SystemVerilog / Verilog</span>
+                </div>
+                <div class="pane-body" style="padding: 0;">
+                    <textarea class="code-editor" id="verilog-code" spellcheck="false">
+module full_adder (
+    input  logic a,
+    input  logic b,
+    input  logic cin,
+    output logic sum,
+    output logic cout
+);
+    // Phương trình logic mạch cộng toàn phần
+    assign sum  = a ^ b ^ cin;
+    assign cout = (a & b) | (b & cin) | (a & cin);
+
+endmodule</textarea>
+                </div>
+            </div>
+
+            <!-- CỘT 2: KẾT QUẢ MÔ PHỎNG & GIẢN ĐỒ SÓNG -->
+            <div class="pane">
+                <div class="pane-header">
+                    <span>Trình xem Dạng sóng & Trạng thái Mô phỏng (Waveform Viewer)</span>
+                    <span style="font-size: 0.75rem; color: var(--accent-green);" id="sim-status">● Đã sẵn sàng</span>
+                </div>
+                <div class="pane-body">
+                    <p style="margin-bottom: 12px; color: var(--text-muted); font-family: sans-serif; font-size: 0.85rem;">
+                        Giản đồ xung nhịp kiểm tra (Testbench Waveform):
+                    </p>
+                    
+                    <div id="waveform-container">
+                        <div class="waveform-row">
+                            <span class="signal-name">CLK</span>
+                            <span class="signal-wave">_&#9612;&#9610;&#9612;&#9610;&#9612;&#9610;&#9612;&#9610;&#9612;&#9610;_</span>
+                        </div>
+                        <div class="waveform-row">
+                            <span class="signal-name">A</span>
+                            <span class="signal-wave">___&#9612;&#9612;&#9610;&#9610;&#9612;&#9612;&#9610;&#9610;___</span>
+                        </div>
+                        <div class="waveform-row">
+                            <span class="signal-name">B</span>
+                            <span class="signal-wave">_____&#9612;&#9612;&#9612;&#9612;&#9610;&#9610;&#9610;_____</span>
+                        </div>
+                        <div class="waveform-row">
+                            <span class="signal-name">SUM</span>
+                            <span class="signal-wave">___&#9612;&#9612;&#9610;&#9610;&#9612;&#9610;&#9612;&#9610;___</span>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 15px; font-family: sans-serif; font-size: 0.85rem; font-weight: bold;">Log Biên dịch & Kiểm tra phần cứng:</div>
+                    <div class="console-box" id="console-output">
+[INFO] Khởi tạo môi trường mô phỏng (Icarus Verilog Engine)...
+[INFO] Trình biên dịch đã sẵn sàng. Nhấn "Biên dịch & Mô phỏng" để kiểm tra thiết kế.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dữ liệu mẫu cho các bài học khác nhau
+        const lessonsData = {
+            1: {
+                title: "Bài học 1: Ôn tập MOSFET & Cổng nghịch đảo CMOS",
+                code: `// Thiết kế mạch Inverter CMOS cơ
